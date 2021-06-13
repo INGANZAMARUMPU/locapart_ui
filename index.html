@@ -3,19 +3,46 @@
 <head>
 	<meta charset="utf-8">
 	<title>LOCAPART</title>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel=stylesheet href="./style.css">
+	<script src="./dependances/vue.js"></script>
+	<script src="./dependances/axios.min.js"></script>
 </head>
 <body>
 	<div id="app">
-	  {{ appartements }}
+		<div class="topbar">
+			<a href="./index.html"><h3>LOCAPPART</h3></a>
+			<button>Connexion</button>
+		</div>
+		<div class="body">
+			<div class="search">
+				<input type="text" placeholder="rechercer une ville...">
+			</div>
+			<div class="list">
+				<div class="appart" v-for="appart in appartements">
+					<b>{{ appart.nom }}</b>
+					<table>
+						<tr>
+							<td>Longitude</td>
+							<td>:{{ appart.longitude }}</td>
+						</tr>
+						<tr>
+							<td>Latitude</td>
+							<td>:{{ appart.latitude }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
 new Vue({
   el: '#app',
   data: {
-    appartements: []
+    appartements: [],
+    API_KEY:"cda1e097cf017d77afebde8769c7f0b5",
+    API_ICON_URL:"http://openweathermap.org/img/w/*code*.png",
+    API_URL:"https://api.openweathermap.org/data/2.5/weather?q=*URL*&appid=*API_KEY*"
   },
   mounted(){
   	axios.get("http://localhost:8080/WS_Locations/api/")
