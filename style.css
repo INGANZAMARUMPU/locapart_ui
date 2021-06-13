@@ -44,10 +44,10 @@
 	grid-column-gap: 10px;
 	grid-row-gap: 10px;
 }
-.appart{
+.ville{
 	background-color: var(--bg);
 	padding: 3px;
 }
-.appart:hover{
+.ville:hover{
 	background-color: var(--bg-hover);
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>LOCAPART</title>
+	<link rel=stylesheet href="./style.css">
+	<script src="./dependances/vue.js"></script>
+	<script src="./dependances/axios.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div class="topbar">
+			<a href="./index.html"><h3>LOCAPPART</h3></a>
+			<button>Connexion</button>
+		</div>
+		<div class="body">
+			<div class="search">
+				<input type="text" v-model="keyword" placeholder="rechercer une ville...">
+			</div>
+			<div class="list">
+				<div class="appart" v-for="appart in liste">
+					<b>{{ appart.nom }}</b>
+					<table>
+						<tr>
+							<td>Longitude</td>
+							<td>:{{ appart.longitude }}</td>
+						</tr>
+						<tr>
+							<td>Latitude</td>
+							<td>:{{ appart.latitude }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+new Vue({
+  el: '#app',
+  data: {
+    appartements: [],
+    liste:[],
+    keyword:"",
+    ville:null,
+    ville_id:undefined,
+    ville_infos:null,
+    API_KEY:"cda1e097cf017d77afebde8769c7f0b5",
+  },
+  watch:{
+  	appartements(new_val){
+  		this.liste = new_val;
+  	},
+  	keyword(new_val){
+  		this.liste = this.appartements.filter(x => {
+  			return x.nom.toLowerCase().includes(new_val.toLowerCase())
+  		})
+  	}
+  },
+  methods:{
+  	imageUrl(nom){
+  		return `http://openweathermap.org/img/w/${nom}.png`
+  	},
+  	fetchVilleInfos(nom){
+  		axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${nom}&appid=${this.API_KEY}`)
+  		.then((response) => {
+  		  this.ville_infos = response.data
+  		}).catch((error) => {
+  		  console.error(error);
+  		})
+  	},
+  	fetchVille(){
+	  	axios.get(`http://localhost:8080/WS_Locations/api/ville/${this.ville_id}/`)
+	  	.then((response) => {
+	  		this.ville = response.data
+	  	}).catch((error) => {
+	  	  console.error(error);
+	  	})
+  	},
+  	fetchVilleApparts(){
+	  	axios.get(`http://localhost:8080/WS_Locations/api/ville/${this.ville_id}/appartements/`)
+	  	.then((response) => {
+	  		this.appartements = response.data
+	  	}).catch((error) => {
+	  	  console.error(error);
+	  	})
+  	}
+  },
+  mounted(){
+  	let array_url = window.location.href.split("#");
+  	this.ville_id = array_url[array_url.length-1];
+  	if(!!this.ville_id){
+  		this.fetchVille();
+  		this.fetchVilleApparts();
+  	}
+  },
+});
+</script>
+</html>

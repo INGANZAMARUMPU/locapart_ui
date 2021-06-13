@@ -15,19 +15,19 @@
 		</div>
 		<div class="body">
 			<div class="search">
-				<input type="text" placeholder="rechercer une ville...">
+				<input type="text" v-model="keyword" placeholder="rechercer une ville...">
 			</div>
 			<div class="list">
-				<div class="appart" v-for="appart in appartements">
-					<b>{{ appart.nom }}</b>
+				<div class="ville" v-for="ville in liste">
+					<b>{{ ville.nom }}</b>
 					<table>
 						<tr>
 							<td>Longitude</td>
-							<td>:{{ appart.longitude }}</td>
+							<td>:{{ ville.longitude }}</td>
 						</tr>
 						<tr>
 							<td>Latitude</td>
-							<td>:{{ appart.latitude }}</td>
+							<td>:{{ ville.latitude }}</td>
 						</tr>
 					</table>
 				</div>
@@ -39,15 +39,24 @@
 new Vue({
   el: '#app',
   data: {
-    appartements: [],
-    API_KEY:"cda1e097cf017d77afebde8769c7f0b5",
-    API_ICON_URL:"http://openweathermap.org/img/w/*code*.png",
-    API_URL:"https://api.openweathermap.org/data/2.5/weather?q=*URL*&appid=*API_KEY*"
+    villes: [],
+    liste:[],
+    keyword:"",
+  },
+  watch:{
+  	villes(new_val){
+  		this.liste = new_val;
+  	},
+  	keyword(new_val){
+  		this.liste = this.villes.filter(x => {
+  			return x.nom.toLowerCase().includes(new_val.toLowerCase())
+  		})
+  	}
   },
   mounted(){
   	axios.get("http://localhost:8080/WS_Locations/api/")
   	.then((response) => {
-  		this.appartements = response.data
+  		this.villes = response.data
   	}).catch((error) => {
   	  console.error(error);
   	})
