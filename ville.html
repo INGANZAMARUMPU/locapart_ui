@@ -9,19 +9,56 @@
 </head>
 <body>
 	<div id="app">
+		<div v-if="!!ville_infos && !!ville">
 		<div class="topbar">
 			<a href="./index.html"><h3>LOCAPPART</h3></a>
 			<button>Connexion</button>
 		</div>
 		<div class="body">
-			<h2 class="villename" v-if="!!ville_infos && !!ville" >
+			<h2 class="villename">
 				{{ ville.nom }}
 				<img :src="imageUrl(ville_infos.weather[0].icon)"/>
+				<label>{{ ville_infos.weather[0].description }}</label>
 			</h2>
-			<hr>
-			<div class="search">
-				<input type="text" v-model="keyword" placeholder="rechercer une appartement...">
+			<table>
+				<tr>
+					<td>Longitude</td>
+					<td>:{{ ville.longitude }}</td>
+				</tr>
+				<tr>
+					<td>Latitude</td>
+					<td>:{{ ville.latitude }}</td>
+				</tr>
+			</table>
+			<table class="table">
+				<thead>
+					<th>temperature</th>
+					<th>feels like</th>
+					<th>temp. min</th>
+					<th>temp. max</th>
+					<th>pression</th>
+					<th>humidité</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ ville_infos.main.temp }}</td>
+						<td>{{ ville_infos.main.feels_like }}</td>
+						<td>{{ ville_infos.main.temp_min }}</td>
+						<td>{{ ville_infos.main.temp_max }}</td>
+						<td>{{ ville_infos.main.pressure }}</td>
+						<td>{{ ville_infos.main.humidity }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="list_head">
+				<div class="title">
+					Nous avons {{ appartements.length }} appartements dans cette ville
+				</div>
+				<div class="search">
+					<input type="text" v-model="keyword" placeholder="rechercer une appartement...">
+				</div>
 			</div>
+			<hr style="margin-bottom:20px">
 			<div class="list_appart">
 				<div class="appart" v-for="appart in liste">
 					<div class="img">
@@ -32,6 +69,7 @@
 					<a class="button">Details</a>
 				</div>
 			</div>
+		</div>
 		</div>
 	</div>
 </body>
@@ -90,9 +128,11 @@ new Vue({
   mounted(){
   	let array_url = window.location.href.split("#");
   	this.ville_id = array_url[array_url.length-1];
-  	if(!!this.ville_id){
+  	if(array_url.length>1){
   		this.fetchVille();
   		this.fetchVilleApparts();
+  	} else {
+  		window.location = "./index.html"
   	}
   },
 });
