@@ -14,22 +14,22 @@
 			<button>Connexion</button>
 		</div>
 		<div class="body">
+			<h2 class="villename" v-if="!!ville_infos && !!ville" >
+				{{ ville.nom }}
+				<img :src="imageUrl(ville_infos.weather[0].icon)"/>
+			</h2>
+			<hr>
 			<div class="search">
-				<input type="text" v-model="keyword" placeholder="rechercer une ville...">
+				<input type="text" v-model="keyword" placeholder="rechercer une appartement...">
 			</div>
-			<div class="list">
+			<div class="list_appart">
 				<div class="appart" v-for="appart in liste">
-					<b>{{ appart.nom }}</b>
-					<table>
-						<tr>
-							<td>Longitude</td>
-							<td>:{{ appart.longitude }}</td>
-						</tr>
-						<tr>
-							<td>Latitude</td>
-							<td>:{{ appart.latitude }}</td>
-						</tr>
-					</table>
+					<div class="img">
+						<img :src="appart.image" width="100%">
+					</div>
+					<h4>{{ appart.nom }}</h4>
+					<span>Prix:</span><b>{{ appart.prix }} €/jour</b>
+					<a class="button">Details</a>
 				</div>
 			</div>
 		</div>
@@ -73,6 +73,7 @@ new Vue({
 	  	axios.get(`http://localhost:8080/WS_Locations/api/ville/${this.ville_id}/`)
 	  	.then((response) => {
 	  		this.ville = response.data
+	  		this.fetchVilleInfos(this.ville.nom)
 	  	}).catch((error) => {
 	  	  console.error(error);
 	  	})

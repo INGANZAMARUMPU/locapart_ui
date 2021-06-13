@@ -18,7 +18,7 @@
 				<input type="text" v-model="keyword" placeholder="rechercer une ville...">
 			</div>
 			<div class="list">
-				<div class="ville" v-for="ville in liste">
+				<a class="ville" v-for="ville in liste" :href="'./ville.html#'+ville.id">
 					<b>{{ ville.nom }}</b>
 					<table>
 						<tr>
@@ -30,7 +30,7 @@
 							<td>:{{ ville.latitude }}</td>
 						</tr>
 					</table>
-				</div>
+				</a>
 			</div>
 		</div>
 	</div>

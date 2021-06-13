@@ -8,6 +8,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	font-family: sans-serif;
+	text-decoration: none;
 }
 .topbar{
 	background-color: var(--bg);
@@ -44,10 +45,39 @@
 	grid-column-gap: 10px;
 	grid-row-gap: 10px;
 }
+.list_appart{
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-column-gap: 15px;
+	grid-row-gap: 15px;
+}
 .ville{
 	background-color: var(--bg);
 	padding: 3px;
+	color: black;
 }
 .ville:hover{
 	background-color: var(--bg-hover);
+}
+.list_appart .img{
+	height: 150px;
+	overflow-y: hidden;
+}
+.button{
+	display: inline-block;
+	width: 100%;
+	background-color: var(--bg);
+	padding: 10px;
+	margin-top: 10px;
+	border: 1px solid var(--bg);
+	text-align: center;
+}
+.button:hover{
+	background-color: var(--bg-hover);
+}
+.list_appart *{
+	margin-bottom: 10px;
+}
+.villename{
+	margin: 30px;
 }
