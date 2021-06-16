@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>LOCAPART</title>
+	<link rel=stylesheet href="./style.css">
+	<script src="./dependances/vue.js"></script>
+	<script src="./dependances/axios.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div v-if="!!appartement">
+			<div class="topbar">
+				<a href="./index.html"><h3>LOCAPPART</h3></a>
+				<button>Connexion</button>
+			</div>
+			<div class="body">
+				<div class="detailsappart">
+					<img :src="appartement.image">
+					<div class="descr">
+						<div>
+							<h3>{{ appartement.nom }}</h3>
+							ville: <b>{{ appartement.ville.nom  }}</b>
+						</div>
+						<p>{{ appartement.details }}</p>
+						<h3>{{ appartement.prix }} €/mois</h3>
+					</div>
+				</div>
+				<form @submit.prevent.stop>
+					<table>
+						<tr>
+							<td><label for="nom">Nom</label></td>
+							<td><input type="text" id="nom" v-model="nom"></td>
+						</tr>
+						<tr>
+							<td><label for="prenom">Prenom</label></td>
+							<td><input type="text" id="prenom" v-model="prenom"></td>
+						</tr>
+						<tr>
+							<td><label for="nom">Semaine</label></td>
+							<td><select v-model="semaine">
+									<option v-for="i in 52" :value="i"
+											v-if="!appartement.reservations.includes(i)">
+										Semaine {{ i }}
+									</option>
+								</select></td>
+						</tr>
+						<tr>
+							<td><label for="nom">Nombre</label></td>
+							<td><input type="text" id="nom"></td>
+						</tr>
+					</table>
+					<label>{{ logs }}</label>
+					<button class="button">Reserver</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+new Vue({
+  el: '#app',
+  data: {
+  	appartement:null, appartement_id:0,
+  	logs:"", semaine:null, nom:"", prenom:""
+  },
+  watch:{
+  },
+  methods:{
+  	fetchAppart(){
+	  	axios.get(`http://localhost:8080/WS_Locations/api/appartement/${this.appartement_id}/`)
+	  	.then((response) => {
+	  		this.appartement = response.data
+	  	}).catch((error) => {
+	  	  console.error(error);
+	  	})
+  	}
+  },
+  mounted(){
+  	let array_url = window.location.href.split("#");
+  	this.appartement_id = array_url[array_url.length-1];
+  	if(array_url.length>1){
+  		this.fetchAppart();
+  	} else {
+  		window.location = "./index.html"
+  	}
+  },
+});
+</script>
+</html>

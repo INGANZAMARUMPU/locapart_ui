@@ -14,6 +14,7 @@
 	background-color: var(--bg);
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 50px;
 }
 .topbar *{
 	margin: 5px;
@@ -60,8 +61,8 @@
 	background-color: var(--bg-hover);
 }
 .list_appart .img{
-	height: 150px;
-	overflow-y: hidden;
+	max-height: 150px;
+	overflow: hidden;
 }
 .button{
 	display: inline-block;
@@ -71,6 +72,8 @@
 	margin-top: 10px;
 	border: 1px solid var(--bg);
 	text-align: center;
+	color: white;
+	font-weight: 600;
 }
 .button:hover{
 	background-color: var(--bg-hover);
@@ -110,4 +113,35 @@
 
 .table th {
 	background-color: #dddddd;
+}
+select{
+	padding: 5px 15px;
+}
+.detailsappart{
+	display: flex;
+}
+.detailsappart *{
+	column-span: 1;
+}
+img{
+	max-width: 500px;
+	margin-right: 20px;
+}
+.descr *{
+	margin-bottom: 20px;
+}
+form{
+	margin-top: 20px;
+}
+form td *{
+	width: 100%;
+}
+form td{
+	padding: 5px 10px 5px 0;
+}
+form input{
+	padding: 5px 15px;
+}
+form .button{
+	width: 200px;
 }

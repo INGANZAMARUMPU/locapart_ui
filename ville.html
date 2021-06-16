@@ -27,7 +27,7 @@
 				</tr>
 				<tr>
 					<td>Latitude</td>
-					<td>:{{ ville.latitude }}</td>
+					<td>:{{ ville.latitude }}N</td>
 				</tr>
 			</table>
 			<table class="table">
@@ -41,21 +41,24 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>{{ ville_infos.main.temp }}</td>
-						<td>{{ ville_infos.main.feels_like }}</td>
-						<td>{{ ville_infos.main.temp_min }}</td>
-						<td>{{ ville_infos.main.temp_max }}</td>
+						<td>{{ ville_infos.main.temp }} °C</td>
+						<td>{{ ville_infos.main.feels_like }} °C</td>
+						<td>{{ ville_infos.main.temp_min }} °C</td>
+						<td>{{ ville_infos.main.temp_max }} °C</td>
 						<td>{{ ville_infos.main.pressure }}</td>
-						<td>{{ ville_infos.main.humidity }}</td>
+						<td>{{ ville_infos.main.humidity }} %</td>
 					</tr>
 				</tbody>
 			</table>
 			<div class="list_head">
-				<div class="title">
-					Nous avons {{ appartements.length }} appartements dans cette ville
+				<div>
+					<span>Appartements disponibles dans la semaine</span> 
+					<span class="title">{{ semaine }}</span>
 				</div>
 				<div class="search">
-					<input type="text" v-model="keyword" placeholder="rechercer une appartement...">
+					<select v-model="semaine">
+						<option v-for="i in 52" :value="i">Semaine {{ i }}</option>
+					</select>
 				</div>
 			</div>
 			<hr style="margin-bottom:20px">
@@ -65,8 +68,8 @@
 						<img :src="appart.image" width="100%">
 					</div>
 					<h4>{{ appart.nom }}</h4>
-					<span>Prix:</span><b>{{ appart.prix }} €/jour</b>
-					<a class="button">Details</a>
+					<span>Prix:</span><b>{{ appart.prix }} €/mois</b>
+					<a class="button" :href="'./details.html#'+appart.id">Details</a>
 				</div>
 			</div>
 		</div>
@@ -80,6 +83,7 @@ new Vue({
     appartements: [],
     liste:[],
     keyword:"",
+    semaine:1,
     ville:null,
     ville_id:undefined,
     ville_infos:null,
@@ -93,6 +97,9 @@ new Vue({
   		this.liste = this.appartements.filter(x => {
   			return x.nom.toLowerCase().includes(new_val.toLowerCase())
   		})
+  	},
+  	semaine(new_val){
+  		this.fetchVilleApparts(new_val)
   	}
   },
   methods:{
@@ -100,7 +107,7 @@ new Vue({
   		return `http://openweathermap.org/img/w/${nom}.png`
   	},
   	fetchVilleInfos(nom){
-  		axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${nom}&appid=${this.API_KEY}`)
+  		axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${nom}&units=metric&appid=${this.API_KEY}`)
   		.then((response) => {
   		  this.ville_infos = response.data
   		}).catch((error) => {
@@ -116,8 +123,8 @@ new Vue({
 	  	  console.error(error);
 	  	})
   	},
-  	fetchVilleApparts(){
-	  	axios.get(`http://localhost:8080/WS_Locations/api/ville/${this.ville_id}/appartements/`)
+  	fetchVilleApparts(semaine){
+	  	axios.get(`http://localhost:8080/WS_Locations/api/ville/${this.ville_id}/appartements/${semaine}`)
 	  	.then((response) => {
 	  		this.appartements = response.data
 	  	}).catch((error) => {
@@ -130,7 +137,7 @@ new Vue({
   	this.ville_id = array_url[array_url.length-1];
   	if(array_url.length>1){
   		this.fetchVille();
-  		this.fetchVilleApparts();
+  		this.fetchVilleApparts(this.semaine);
   	} else {
   		window.location = "./index.html"
   	}
